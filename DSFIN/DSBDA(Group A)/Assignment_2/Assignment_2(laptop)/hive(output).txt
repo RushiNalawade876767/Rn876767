@@ -1,0 +1,291 @@
+adi@Aditya:~$ hive
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/usr/local/hive/lib/log4j-slf4j-impl-2.6.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/usr/local/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+
+Logging initialized using configuration in jar:file:/usr/local/hive/lib/hive-common-2.3.9.jar!/hive-log4j2.properties Async: true
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.apache.hadoop.security.authentication.util.KerberosUtil (file:/usr/local/hadoop/share/hadoop/common/lib/hadoop-auth-2.6.0.jar) to method sun.security.krb5.Config.getInstance()
+WARNING: Please consider reporting this to the maintainers of org.apache.hadoop.security.authentication.util.KerberosUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+hive> show databases;
+OK
+aviation_db
+default
+Time taken: 3.769 seconds, Fetched: 2 row(s)
+hive> create database flight_db;
+OK
+Time taken: 0.148 seconds
+hive> use flight_db;
+OK
+Time taken: 0.011 seconds
+hive> create database flight_db;
+FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.DDLTask. Database flight_db already exists
+hive>
+    > use flight_db;
+OK
+Time taken: 0.008 seconds
+hive>
+    > create table flights(
+    > year int,
+    > month int,
+    > day int,
+    > flight_num string,
+    > origin string,
+    > dest string,
+    > depdelay int
+    > )
+    > row format delimited
+    > fields terminated by ','
+    > stored as textfile;
+OK
+Time taken: 0.413 seconds
+hive> insert into flights values
+    > (2008,1,2,'A101','del','mum',10);
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = adi_20260510034446_0d39f13d-f851-475a-b587-43cd373c1094
+Total jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+Job running in-process (local Hadoop)
+2026-05-10 03:44:50,058 Stage-1 map = 100%,  reduce = 0%
+Ended Job = job_local169506019_0001
+Stage-4 is selected by condition resolver.
+Stage-3 is filtered out by condition resolver.
+Stage-5 is filtered out by condition resolver.
+Moving data to directory hdfs://localhost:9000/user/hive/warehouse/flight_db.db/flights/.hive-staging_hive_2026-05-10_03-44-46_670_8244702848753131868-1/-ext-10000
+Loading data to table flight_db.flights
+MapReduce Jobs Launched:
+Stage-Stage-1:  HDFS Read: 25 HDFS Write: 123 SUCCESS
+Total MapReduce CPU Time Spent: 0 msec
+OK
+Time taken: 3.824 seconds
+hive> insert into flights values
+    > (2008,1,2,'A102','mum','del',20);
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = adi_20260510034500_edd1e1d0-e088-4aa9-951c-ba5a6e580ab0
+Total jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+Job running in-process (local Hadoop)
+2026-05-10 03:45:01,940 Stage-1 map = 100%,  reduce = 0%
+Ended Job = job_local841808845_0002
+Stage-4 is selected by condition resolver.
+Stage-3 is filtered out by condition resolver.
+Stage-5 is filtered out by condition resolver.
+Moving data to directory hdfs://localhost:9000/user/hive/warehouse/flight_db.db/flights/.hive-staging_hive_2026-05-10_03-45-00_384_2997259440988629059-1/-ext-10000
+Loading data to table flight_db.flights
+MapReduce Jobs Launched:
+Stage-Stage-1:  HDFS Read: 123 HDFS Write: 246 SUCCESS
+Total MapReduce CPU Time Spent: 0 msec
+OK
+Time taken: 1.863 seconds
+hive> select * from flights;
+OK
+2008    1       2       A101    del     mum     10
+2008    1       2       A102    mum     del     20
+Time taken: 0.24 seconds, Fetched: 2 row(s)
+hive> select day,avg(depdelay)
+    > from flights
+    > where year=2008
+    > group by day;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = adi_20260510034531_e1638108-9cee-4c03-93e4-cf45fb56e87a
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Job running in-process (local Hadoop)
+2026-05-10 03:45:32,747 Stage-1 map = 100%,  reduce = 100%
+Ended Job = job_local783077174_0003
+MapReduce Jobs Launched:
+Stage-Stage-1:  HDFS Read: 592 HDFS Write: 492 SUCCESS
+Total MapReduce CPU Time Spent: 0 msec
+OK
+2       15.0
+Time taken: 1.522 seconds, Fetched: 1 row(s)
+hive> alter table flights add columns(airline string);
+OK
+Time taken: 0.097 seconds
+hive> select * from flights;
+OK
+2008    1       2       A101    del     mum     10      NULL
+2008    1       2       A102    mum     del     20      NULL
+Time taken: 0.2 seconds, Fetched: 2 row(s)
+hive> exit;
+adi@Aditya:~$ nano flight_ext.txt
+adi@Aditya:~$ hdfs dfs -mkdir /flight_data
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.apache.hadoop.security.authentication.util.KerberosUtil (file:/usr/local/hadoop/share/hadoop/common/lib/hadoop-auth-2.6.0.jar) to method sun.security.krb5.Config.getInstance()
+WARNING: Please consider reporting this to the maintainers of org.apache.hadoop.security.authentication.util.KerberosUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+26/05/10 03:47:19 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+adi@Aditya:~$ hdfs dfs -cat /flight_data/flight_ext.txt
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.apache.hadoop.security.authentication.util.KerberosUtil (file:/usr/local/hadoop/share/hadoop/common/lib/hadoop-auth-2.6.0.jar) to method sun.security.krb5.Config.getInstance()
+WARNING: Please consider reporting this to the maintainers of org.apache.hadoop.security.authentication.util.KerberosUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+26/05/10 03:48:24 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+cat: `/flight_data/flight_ext.txt': No such file or directory
+adi@Aditya:~$ hdfs dfs -put flight_ext.txt /flight_data/
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.apache.hadoop.security.authentication.util.KerberosUtil (file:/usr/local/hadoop/share/hadoop/common/lib/hadoop-auth-2.6.0.jar) to method sun.security.krb5.Config.getInstance()
+WARNING: Please consider reporting this to the maintainers of org.apache.hadoop.security.authentication.util.KerberosUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+26/05/10 03:48:52 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+adi@Aditya:~$ hdfs dfs -ls /flight_data/
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.apache.hadoop.security.authentication.util.KerberosUtil (file:/usr/local/hadoop/share/hadoop/common/lib/hadoop-auth-2.6.0.jar) to method sun.security.krb5.Config.getInstance()
+WARNING: Please consider reporting this to the maintainers of org.apache.hadoop.security.authentication.util.KerberosUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+26/05/10 03:49:01 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Found 1 items
+-rw-r--r--   1 adi supergroup         79 2026-05-10 03:48 /flight_data/flight_ext.txt
+adi@Aditya:~$ hive
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/usr/local/hive/lib/log4j-slf4j-impl-2.6.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/usr/local/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+
+Logging initialized using configuration in jar:file:/usr/local/hive/lib/hive-common-2.3.9.jar!/hive-log4j2.properties Async: true
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.apache.hadoop.security.authentication.util.KerberosUtil (file:/usr/local/hadoop/share/hadoop/common/lib/hadoop-auth-2.6.0.jar) to method sun.security.krb5.Config.getInstance()
+WARNING: Please consider reporting this to the maintainers of org.apache.hadoop.security.authentication.util.KerberosUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+hive> create external table flight_ext(
+    > year int,
+    > month int,
+    > day int,
+    > flight_num string,
+    > origin string,
+    > dest string,
+    > depdelay int
+    > )
+    > row format delimited
+    > fields terminated by ','
+    > location '/flight_data/';
+OK
+Time taken: 3.785 seconds
+hive> select * from flight_ext;
+OK
+2008    1       1       1A101   del     mum     10
+2008    1       2       1A102   mum     del     20
+2008    1       1       6E201   del     blr     30
+NULL    NULL    NULL    NULL    NULL    NULL    NULL
+Time taken: 1.901 seconds, Fetched: 4 row(s)
+hive> exit;
+adi@Aditya:~$ nano flight_ext.txt
+adi@Aditya:~$ hdfs dfs -put -f flight_ext.txt /flight_data/
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.apache.hadoop.security.authentication.util.KerberosUtil (file:/usr/local/hadoop/share/hadoop/common/lib/hadoop-auth-2.6.0.jar) to method sun.security.krb5.Config.getInstance()
+WARNING: Please consider reporting this to the maintainers of org.apache.hadoop.security.authentication.util.KerberosUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+26/05/10 03:51:37 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+adi@Aditya:~$ select * from flight_ext;
+-bash: syntax error near unexpected token `from'
+adi@Aditya:~$ hive;
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/usr/local/hive/lib/log4j-slf4j-impl-2.6.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/usr/local/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+
+Logging initialized using configuration in jar:file:/usr/local/hive/lib/hive-common-2.3.9.jar!/hive-log4j2.properties Async: true
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.apache.hadoop.security.authentication.util.KerberosUtil (file:/usr/local/hadoop/share/hadoop/common/lib/hadoop-auth-2.6.0.jar) to method sun.security.krb5.Config.getInstance()
+WARNING: Please consider reporting this to the maintainers of org.apache.hadoop.security.authentication.util.KerberosUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+hive> select * from flight_ext;
+OK
+2008    1       1       1A101   del     mum     10
+2008    1       2       1A102   mum     del     20
+2008    1       1       6E201   del     blr     30
+Time taken: 4.859 seconds, Fetched: 3 row(s)
+hive> use flight_db;
+OK
+Time taken: 0.02 seconds
+hive> select f.flight_num,f.origin,f.dest,e.depdelay
+    > from flights f
+    > join default.flight_ext e
+    > on f.origin=e.origin;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = adi_20260510035246_27dbadb3-e2e6-40a1-931c-70f732f6f6da
+Total jobs = 1
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/usr/local/hive/lib/log4j-slf4j-impl-2.6.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/usr/local/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.5.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by org.apache.hadoop.security.authentication.util.KerberosUtil (file:/usr/local/hadoop/share/hadoop/common/lib/hadoop-auth-2.6.0.jar) to method sun.security.krb5.Config.getInstance()
+WARNING: Please consider reporting this to the maintainers of org.apache.hadoop.security.authentication.util.KerberosUtil
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+2026-05-10 03:52:53     Starting to launch local task to process map join;      maximum memory = 536870912
+2026-05-10 03:52:54     Dump the side-table for tag: 0 with group count: 2 into file: file:/tmp/adi/b680e48a-9212-47c6-86d1-3cf12ce0e956/hive_2026-05-10_03-52-46_730_4104040810440987335-1/-local-10004/HashTable-Stage-3/MapJoin-mapfile00--.hashtable
+2026-05-10 03:52:54     Uploaded 1 File to: file:/tmp/adi/b680e48a-9212-47c6-86d1-3cf12ce0e956/hive_2026-05-10_03-52-46_730_4104040810440987335-1/-local-10004/HashTable-Stage-3/MapJoin-mapfile00--.hashtable (322 bytes)
+2026-05-10 03:52:54     End of local task; Time Taken: 1.045 sec.
+Execution completed successfully
+MapredLocal task succeeded
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Job running in-process (local Hadoop)
+2026-05-10 03:52:56,797 Stage-3 map = 100%,  reduce = 0%
+Ended Job = job_local959993364_0001
+MapReduce Jobs Launched:
+Stage-Stage-3:  HDFS Read: 156 HDFS Write: 0 SUCCESS
+Total MapReduce CPU Time Spent: 0 msec
+OK
+A101    del     mum     10
+A102    mum     del     20
+A101    del     mum     30
+Time taken: 10.08 seconds, Fetched: 3 row(s)
+hive> create index flight_index
+    > on table flights(flight_num)
+    > as 'COMPACT'
+    > with deferred rebuild;
+OK
+Time taken: 0.516 seconds
+hive> alter index flight_index
+    > on flights
+    > rebuild;
+WARNING: Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+Query ID = adi_20260510035538_92de1b06-09e7-4b2c-9809-bf5574765011
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Job running in-process (local Hadoop)
+2026-05-10 03:55:40,348 Stage-1 map = 100%,  reduce = 100%
+Ended Job = job_local2004828682_0002
+Loading data to table flight_db.flight_db__flights_flight_index__
+MapReduce Jobs Launched:
+Stage-Stage-1:  HDFS Read: 412 HDFS Write: 265 SUCCESS
+Total MapReduce CPU Time Spent: 0 msec
+OK
+Time taken: 2.154 seconds
+hive> exit;

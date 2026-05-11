@@ -1,0 +1,402 @@
+hive> create database flight_db;
+OK
+Time taken: 2.484 seconds
+hive> use flight_db;
+OK
+Time taken: 0.135 seconds
+hive> show databases;
+OK
+db
+db1
+db2
+default
+flight_db
+flight_info
+folder
+folder2
+folder3
+ketan
+new
+project
+t4batch
+yo
+Time taken: 0.666 seconds, Fetched: 14 row(s)
+hive> create table flights(
+    > year int,
+    > month int,
+    > day int,
+    > flight_num string,
+    > origin string,
+    > dest string,
+    > depdelay int
+    > )
+    > row format delimited
+    > fields terminated by ','
+    > stored as textfile;
+OK
+Time taken: 0.777 seconds
+hive> describe flights;
+OK
+year                	int                 	                    
+month               	int                 	                    
+day                 	int                 	                    
+flight_num          	string              	                    
+origin              	string              	                    
+dest                	string              	                    
+depdelay            	int                 	                    
+Time taken: 0.496 seconds, Fetched: 7 row(s)
+hive> insert into flights values
+    > (2008,1,2,'A101','del','mum',10);
+Query ID = cloudera_20251107085151_2c1c5b1c-a1b4-4d33-8bb5-73a5e395dc70
+Total jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1762530497765_0001, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1762530497765_0001/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1762530497765_0001
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2025-11-07 08:52:18,029 Stage-1 map = 0%,  reduce = 0%
+2025-11-07 08:52:43,325 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 2.78 sec
+MapReduce Total cumulative CPU time: 2 seconds 780 msec
+Ended Job = job_1762530497765_0001
+Stage-4 is selected by condition resolver.
+Stage-3 is filtered out by condition resolver.
+Stage-5 is filtered out by condition resolver.
+Moving data to: hdfs://quickstart.cloudera:8020/user/hive/warehouse/flight_db.db/flights/.hive-staging_hive_2025-11-07_08-51-28_405_5130972557971841963-1/-ext-10000
+Loading data to table flight_db.flights
+Table flight_db.flights stats: [numFiles=1, numRows=1, totalSize=25, rawDataSize=24]
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1   Cumulative CPU: 3.21 sec   HDFS Read: 4572 HDFS Write: 98 SUCCESS
+Total MapReduce CPU Time Spent: 3 seconds 210 msec
+OK
+Time taken: 78.94 seconds
+hive> insert into flights values(2008,1,2,'A102','mum','del',20);
+Query ID = cloudera_20251107085353_c385b93d-0bf2-47f6-a01d-c48904d6f89d
+Total jobs = 3
+Launching Job 1 out of 3
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1762530497765_0002, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1762530497765_0002/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1762530497765_0002
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 0
+2025-11-07 08:54:13,676 Stage-1 map = 0%,  reduce = 0%
+2025-11-07 08:54:39,313 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 3.17 sec
+MapReduce Total cumulative CPU time: 3 seconds 170 msec
+Ended Job = job_1762530497765_0002
+Stage-4 is selected by condition resolver.
+Stage-3 is filtered out by condition resolver.
+Stage-5 is filtered out by condition resolver.
+Moving data to: hdfs://quickstart.cloudera:8020/user/hive/warehouse/flight_db.db/flights/.hive-staging_hive_2025-11-07_08-53-42_932_6447806045470663032-1/-ext-10000
+Loading data to table flight_db.flights
+Table flight_db.flights stats: [numFiles=2, numRows=2, totalSize=50, rawDataSize=48]
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1   Cumulative CPU: 3.17 sec   HDFS Read: 4669 HDFS Write: 98 SUCCESS
+Total MapReduce CPU Time Spent: 3 seconds 170 msec
+OK
+Time taken: 59.358 seconds
+hive> select * from flights;
+OK
+2008	1	2	A101	del	mum	10
+2008	1	2	A102	mum	del	20
+Time taken: 0.306 seconds, Fetched: 2 row(s)
+hive> select day,avg(depdelay) from flights where year=2008 group by day;
+Query ID = cloudera_20251107085656_3bee8abd-1b28-4d1e-88c6-bc98e89e2c18
+Total jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 1
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapreduce.job.reduces=<number>
+Starting Job = job_1762530497765_0003, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1762530497765_0003/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1762530497765_0003
+Hadoop job information for Stage-1: number of mappers: 1; number of reducers: 1
+2025-11-07 08:56:33,382 Stage-1 map = 0%,  reduce = 0%
+2025-11-07 08:56:58,699 Stage-1 map = 100%,  reduce = 0%, Cumulative CPU 2.97 sec
+2025-11-07 08:57:23,617 Stage-1 map = 100%,  reduce = 100%, Cumulative CPU 5.58 sec
+MapReduce Total cumulative CPU time: 5 seconds 580 msec
+Ended Job = job_1762530497765_0003
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 5.87 sec   HDFS Read: 8604 HDFS Write: 7 SUCCESS
+Total MapReduce CPU Time Spent: 5 seconds 870 msec
+OK
+2	15.0
+Time taken: 82.55 seconds, Fetched: 1 row(s)
+hive> alter table flights add columns(airline string);
+OK
+Time taken: 0.387 seconds
+hive> select * from flights;
+OK
+2008	1	2	A101	del	mum	10	NULL
+2008	1	2	A102	mum	del	20	NULL
+Time taken: 0.151 seconds, Fetched: 2 row(s)
+hive> exit;
+WARN: The method class org.apache.commons.logging.impl.SLF4JLogFactory#release() was invoked.
+WARN: Please see http://www.slf4j.org/codes.html#release for an explanation.
+[cloudera@quickstart ~]$ nano flight_ext.txt
+[cloudera@quickstart ~]$ nano flight_ext.txt
+[cloudera@quickstart ~]$ hdfs dfs -mkdir/user/cloudera/flight_data
+-mkdir/user/cloudera/flight_data: Unknown command
+[cloudera@quickstart ~]$ hdfs dfs -mkdir /user/cloudera/flight_data
+[cloudera@quickstart ~]$ hdfs dfs -put flight_ext.txt /user/cloudera/flight_data/
+[cloudera@quickstart ~]$ hdfs dfs -ls /user/cloudera/flight_data/
+Found 1 items
+-rw-r--r--   1 cloudera cloudera         78 2025-11-07 09:09 /user/cloudera/flight_data/flight_ext.txt
+[cloudera@quickstart ~]$ hive
+
+Logging initialized using configuration in file:/etc/hive/conf.dist/hive-log4j.properties
+WARNING: Hive CLI is deprecated and migration to Beeline is recommended.
+hive> create external table flight_ext(
+    > year int,
+    > month int,
+    > day int,
+    > flight_num string,
+    > origin string,
+    > dest string,
+    > depdelay int
+    > )
+    > row format delimited
+    > fields terminated by ','
+    > location 'user/cloudera/f;ight_data/';
+MismatchedTokenException(269!=302)
+	at org.antlr.runtime.BaseRecognizer.recoverFromMismatchedToken(BaseRecognizer.java:617)
+	at org.antlr.runtime.BaseRecognizer.match(BaseRecognizer.java:115)
+	at org.apache.hadoop.hive.ql.parse.HiveParser.tableLocation(HiveParser.java:36145)
+	at org.apache.hadoop.hive.ql.parse.HiveParser.createTableStatement(HiveParser.java:5033)
+	at org.apache.hadoop.hive.ql.parse.HiveParser.ddlStatement(HiveParser.java:2355)
+	at org.apache.hadoop.hive.ql.parse.HiveParser.execStatement(HiveParser.java:1579)
+	at org.apache.hadoop.hive.ql.parse.HiveParser.statement(HiveParser.java:1057)
+	at org.apache.hadoop.hive.ql.parse.ParseDriver.parse(ParseDriver.java:199)
+	at org.apache.hadoop.hive.ql.parse.ParseDriver.parse(ParseDriver.java:166)
+	at org.apache.hadoop.hive.ql.Driver.compile(Driver.java:393)
+	at org.apache.hadoop.hive.ql.Driver.compile(Driver.java:307)
+	at org.apache.hadoop.hive.ql.Driver.compileInternal(Driver.java:1110)
+	at org.apache.hadoop.hive.ql.Driver.runInternal(Driver.java:1158)
+	at org.apache.hadoop.hive.ql.Driver.run(Driver.java:1047)
+	at org.apache.hadoop.hive.ql.Driver.run(Driver.java:1037)
+	at org.apache.hadoop.hive.cli.CliDriver.processLocalCmd(CliDriver.java:207)
+	at org.apache.hadoop.hive.cli.CliDriver.processCmd(CliDriver.java:159)
+	at org.apache.hadoop.hive.cli.CliDriver.processLine(CliDriver.java:370)
+	at org.apache.hadoop.hive.cli.CliDriver.executeDriver(CliDriver.java:756)
+	at org.apache.hadoop.hive.cli.CliDriver.run(CliDriver.java:675)
+	at org.apache.hadoop.hive.cli.CliDriver.main(CliDriver.java:615)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:221)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:136)
+FAILED: ParseException line 12:10 mismatched input 'user' expecting StringLiteral near 'location' in table location specification
+hive> create external table flight_ext(
+    > year int,
+    > month int,
+    > day int,
+    > flight_num string,
+    > origin string,
+    > dest string,
+    > depdelay int
+    > )
+    > row format delimited
+    > fields terminated by ','
+    > location '/user/cloudera.flight_data/';
+OK
+Time taken: 1.115 seconds
+hive> select * from flight_ext;
+OK
+Time taken: 1.805 seconds
+hive> drop table flight_ext;
+OK
+Time taken: 1.21 seconds
+hive> create external table flight_ext(year int,month int,day int,flight_num string,origin string,dest string,depdelay int)
+    > row format delimited by ','
+    > [cloudera@quickstart ~]$ hive
+
+Logging initialized using configuration in file:/etc/hive/conf.dist/hive-log4j.properties
+WARNING: Hive CLI is deprecated and migration to Beeline is recommended.
+hive> create external table flight_ext(year int,month int,day int,flight_num string,origin string,dest string,depdelay int)
+    > row format delimited
+    > fields terminated by '.'
+    > location '/user/cloudera/flight_data/';
+OK
+Time taken: 3.154 seconds
+hive> select * from flight_ext;
+OK
+NULL	NULL	NULL	NULL	NULL	NULL	NULL
+NULL	NULL	NULL	NULL	NULL	NULL	NULL
+NULL	NULL	NULL	NULL	NULL	NULL	NULL
+Time taken: 1.986 seconds, Fetched: 3 row(s)
+hive> drop table flight_ext;
+OK
+Time taken: 0.312 seconds
+hive> create external table flight_ext(year int,month int,day int,flight_num string,origin string,dest string,depdelay int)
+    > row format delimited
+    > [cloudera@quickstart ~]$ hive
+
+Logging initialized using configuration in file:/etc/hive/conf.dist/hive-log4j.properties
+WARNING: Hive CLI is deprecated and migration to Beeline is recommended.
+hive> create external table flight_ext(year int,month int,day int,flight_num string,origin string,dest string,depdelay int)
+    > row format delimited
+    > fields terminated by ' '
+    > location '/user/cloudera/flight_data/';
+OK
+Time taken: 3.243 seconds
+hive> select * from flight_ext;
+OK
+NULL	NULL	NULL	NULL	NULL	NULL	NULL
+NULL	NULL	NULL	NULL	NULL	NULL	NULL
+NULL	NULL	NULL	NULL	NULL	NULL	NULL
+Time taken: 1.864 seconds, Fetched: 3 row(s)
+hive> exit;
+WARN: The method class org.apache.commons.logging.impl.SLF4JLogFactory#release() was invoked.
+WARN: Please see http://www.slf4j.org/codes.html#release for an explanation.
+[cloudera@quickstart ~]$ nano flight-ext.txt
+[cloudera@quickstart ~]$ hdfs dfs -cat /user/cloudera/flight_data/flight_ext.txt
+2008,1,1,1A101,del,mum,10
+2008,1,2,1A102,mum,del,20
+2008,1,1,6E201,del.blr,30
+[cloudera@quickstart ~]$ hive
+^C[cloudera@quickstart ~]$ hive
+
+Logging initialized using configuration in file:/etc/hive/conf.dist/hive-log4j.properties
+WARNING: Hive CLI is deprecated and migration to Beeline is recommended.
+hive> [cloudera@quickstart ~]$ hive
+
+Logging initialized using configuration in file:/etc/hive/conf.dist/hive-log4j.properties
+WARNING: Hive CLI is deprecated and migration to Beeline is recommended.
+hive> drop table flight_ext;
+OK
+Time taken: 2.707 seconds
+hive> create external table flight_ext(year int,month int,day int,flight_num string,origin string,dest string,depdelay int)
+    > row format delimited
+    > fields terminated by ','
+    > location '/user/cloudera/flight_data/';
+OK
+Time taken: 0.816 seconds
+hive> select * from flight_ext;
+OK
+2008	1	1	1A101	del	mum	10
+2008	1	2	1A102	mum	del	20
+2008	1	1	6E201	del.blr	30	NULL
+Time taken: 1.77 seconds, Fetched: 3 row(s)
+hive> create table airports(
+    > code string,
+    > city string
+    > );
+OK
+Time taken: 0.161 seconds
+hive> show tables;
+OK
+airports
+emp
+flight
+flight2
+flight_ext
+Time taken: 0.13 seconds, Fetched: 5 row(s)
+hive> select f.flight_num,f.origin,f.dest,e.depdelay
+    > from flights f
+    > join flight_ext e
+    > on f.flight_num=e.flight_num;
+FAILED: SemanticException [Error 10001]: Line 2:5 Table not found 'flights'
+hive> select current_database();
+OK
+default
+Time taken: 0.665 seconds, Fetched: 1 row(s)
+hive> use flight_db;
+OK
+Time taken: 0.041 seconds
+hive> select f.flight_num,f_origin,f_dest,e.depelay
+    > from flights f
+    > join default.flight_ext e
+    > on f.flight_num=e.flight_num;
+FAILED: SemanticException [Error 10004]: Line 1:20 Invalid table alias or column reference 'f_origin': (possible column names are: f.year, f.month, f.day, f.flight_num, f.origin, f.dest, f.depdelay, f.airline, e.year, e.month, e.day, e.flight_num, e.origin, e.dest, e.depdelay)
+hive> select f.flight_num,f.origin,f.dest,e.depelay
+    > from flights f
+    > join default.flight_ext e
+    > on f.flight_num=e.flight_num;
+FAILED: SemanticException [Error 10002]: Line 1:38 Invalid column reference 'depelay'
+hive> select f.flight_num,f.origin,f.dest,e.depdelay
+    > from flights f
+    > join default.flight_ext e
+    > on f.flight_num=e.flight_num;
+Query ID = cloudera_20251107095353_3aa062fb-4418-4fc6-8f56-a56b9a2cfe04
+Total jobs = 1
+Execution log at: /tmp/cloudera/cloudera_20251107095353_3aa062fb-4418-4fc6-8f56-a56b9a2cfe04.log
+2025-11-07 09:54:07	Starting to launch local task to process map join;	maximum memory = 1013645312
+2025-11-07 09:54:13	Dump the side-table for tag: 0 with group count: 2 into file: file:/tmp/cloudera/e7ae96ad-e8de-4201-b38b-af1a0629a69c/hive_2025-11-07_09-53-47_853_1437966086703830170-1/-local-10003/HashTable-Stage-3/MapJoin-mapfile00--.hashtable
+2025-11-07 09:54:13	Uploaded 1 File to: file:/tmp/cloudera/e7ae96ad-e8de-4201-b38b-af1a0629a69c/hive_2025-11-07_09-53-47_853_1437966086703830170-1/-local-10003/HashTable-Stage-3/MapJoin-mapfile00--.hashtable (322 bytes)
+2025-11-07 09:54:13	End of local task; Time Taken: 6.114 sec.
+Execution completed successfully
+MapredLocal task succeeded
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1762530497765_0004, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1762530497765_0004/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1762530497765_0004
+Hadoop job information for Stage-3: number of mappers: 1; number of reducers: 0
+2025-11-07 09:54:51,445 Stage-3 map = 0%,  reduce = 0%
+2025-11-07 09:55:15,443 Stage-3 map = 100%,  reduce = 0%, Cumulative CPU 2.75 sec
+MapReduce Total cumulative CPU time: 2 seconds 750 msec
+Ended Job = job_1762530497765_0004
+MapReduce Jobs Launched: 
+Stage-Stage-3: Map: 1   Cumulative CPU: 2.75 sec   HDFS Read: 6977 HDFS Write: 0 SUCCESS
+Total MapReduce CPU Time Spent: 2 seconds 750 msec
+OK
+Time taken: 90.035 seconds
+hive> selct * from flights;
+NoViableAltException(26@[])
+	at org.apache.hadoop.hive.ql.parse.HiveParser.statement(HiveParser.java:1020)
+	at org.apache.hadoop.hive.ql.parse.ParseDriver.parse(ParseDriver.java:199)
+	at org.apache.hadoop.hive.ql.parse.ParseDriver.parse(ParseDriver.java:166)
+	at org.apache.hadoop.hive.ql.Driver.compile(Driver.java:393)
+	at org.apache.hadoop.hive.ql.Driver.compile(Driver.java:307)
+	at org.apache.hadoop.hive.ql.Driver.compileInternal(Driver.java:1110)
+	at org.apache.hadoop.hive.ql.Driver.runInternal(Driver.java:1158)
+	at org.apache.hadoop.hive.ql.Driver.run(Driver.java:1047)
+	at org.apache.hadoop.hive.ql.Driver.run(Driver.java:1037)
+	at org.apache.hadoop.hive.cli.CliDriver.processLocalCmd(CliDriver.java:207)
+	at org.apache.hadoop.hive.cli.CliDriver.processCmd(CliDriver.java:159)
+	at org.apache.hadoop.hive.cli.CliDriver.processLine(CliDriver.java:370)
+	at org.apache.hadoop.hive.cli.CliDriver.executeDriver(CliDriver.java:756)
+	at org.apache.hadoop.hive.cli.CliDriver.run(CliDriver.java:675)
+	at org.apache.hadoop.hive.cli.CliDriver.main(CliDriver.java:615)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.hadoop.util.RunJar.run(RunJar.java:221)
+	at org.apache.hadoop.util.RunJar.main(RunJar.java:136)
+FAILED: ParseException line 1:0 cannot recognize input near 'selct' '*' 'from'
+hive> select * from flights;
+OK
+2008	1	2	A101	del	mum	10	NULL
+2008	1	2	A102	mum	del	20	NULL
+Time taken: 0.166 seconds, Fetched: 2 row(s)
+hive> select f.flight_num,f.origin,f.dest,e.depdelay
+    > from flights f
+    > join default.flight_ext e
+    > on f.origin=e.origin;
+Query ID = cloudera_20251107100000_ea621b63-4339-4b30-91d4-653134487c55
+Total jobs = 1
+Execution log at: /tmp/cloudera/cloudera_20251107100000_ea621b63-4339-4b30-91d4-653134487c55.log
+2025-11-07 10:00:26	Starting to launch local task to process map join;	maximum memory = 1013645312
+2025-11-07 10:00:32	Dump the side-table for tag: 0 with group count: 2 into file: file:/tmp/cloudera/e7ae96ad-e8de-4201-b38b-af1a0629a69c/hive_2025-11-07_10-00-08_696_442275937195171200-1/-local-10003/HashTable-Stage-3/MapJoin-mapfile10--.hashtable
+2025-11-07 10:00:32	Uploaded 1 File to: file:/tmp/cloudera/e7ae96ad-e8de-4201-b38b-af1a0629a69c/hive_2025-11-07_10-00-08_696_442275937195171200-1/-local-10003/HashTable-Stage-3/MapJoin-mapfile10--.hashtable (322 bytes)
+2025-11-07 10:00:32	End of local task; Time Taken: 5.969 sec.
+Execution completed successfully
+MapredLocal task succeeded
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_1762530497765_0005, Tracking URL = http://quickstart.cloudera:8088/proxy/application_1762530497765_0005/
+Kill Command = /usr/lib/hadoop/bin/hadoop job  -kill job_1762530497765_0005
+Hadoop job information for Stage-3: number of mappers: 1; number of reducers: 0
+2025-11-07 10:01:02,871 Stage-3 map = 0%,  reduce = 0%
+2025-11-07 10:01:29,760 Stage-3 map = 100%,  reduce = 0%, Cumulative CPU 3.27 sec
+MapReduce Total cumulative CPU time: 3 seconds 270 msec
+Ended Job = job_1762530497765_0005
+MapReduce Jobs Launched: 
+Stage-Stage-3: Map: 1   Cumulative CPU: 3.27 sec   HDFS Read: 7017 HDFS Write: 32 SUCCESS
+Total MapReduce CPU Time Spent: 3 seconds 270 msec
+OK
+A101	del	mum	10
+A102	mum	del	20
+Time taken: 82.272 seconds, Fetched: 2 row(s)
+hive> 
