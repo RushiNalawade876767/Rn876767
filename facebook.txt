@@ -1,0 +1,81 @@
+import pandas as pd
+import numpy as np
+
+df = pd.read_csv('dataset_Facebook.csv', sep=';')
+df.head()
+
+
+data1 = df.iloc[0:100]
+data2 = df.iloc[100:200]
+data3 = df.iloc[200:300]
+data4 = df.iloc[300:400]
+data5 = df.iloc[400:500]
+
+data1
+
+data2
+
+data3
+
+data4
+
+data5
+
+subset_loc = df.loc[0:10, ['Type', 'Category', 'like']]
+
+subset_loc
+
+mergeddata = pd.concat([data1, data2, data3, data4, data5], axis=0)
+
+mergeddata
+
+subset_cols = df[['Type', 'like', 'share']]
+
+subset_cols
+
+df_part1 = df.iloc[:, :6]   # now includes Post Hour
+df_part2 = df.iloc[:, 5:]   # also includes Post Hour
+merged = pd.merge(df_part1, df_part2, on='Post Hour', how='inner')
+
+merged
+
+df.columns
+
+df_part1 = df[['Post Hour', 'Type', 'Category']]
+df_part2 = df[['Post Hour', 'like', 'share']]
+merged = pd.merge(df_part1, df_part2, on='Post Hour', how='inner')
+merged
+
+sorted_df = df.sort_values('Page total likes')
+
+sorted_df 
+
+sorted_df_desc = df.sort_values('Page total likes', ascending=False)
+
+sorted_df_desc
+
+transposed_df = df.T
+
+transposed_df
+
+transposed_df = df.transpose()
+
+transposed_df
+
+df.shape
+
+arr = np.arange(12)
+reshaped_arr = arr.reshape(4,3)
+print(reshaped_arr)
+
+df_flat = df.values.ravel()
+
+transposed_df
+
+table = pd.pivot_table(
+    df,
+    index=['Post Month','Post Weekday','Lifetime Post Consumptions'],
+    values='like'
+)
+
+table
